@@ -12,7 +12,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email',)
+        fields = ('phone',)
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -40,4 +40,11 @@ class UserChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('email', 'password', 'is_active', 'is_admin')
+        fields = ('phone', 'password', 'is_active', 'is_admin')
+        
+        
+        
+        
+class LoginForm(forms.Form):
+    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'} ),label='شماره تلفن')
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}),label='رمز عبور')
