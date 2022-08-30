@@ -78,3 +78,14 @@ class User(AbstractBaseUser):
     class Meta:
         verbose_name = 'کاربر'
         verbose_name_plural ='کاربران'
+        
+        
+        
+class Otp(models.Model):
+    token = models.CharField(max_length=200,null=True)
+    phone = models.CharField(max_length=11)
+    code = models.SmallIntegerField()
+    expiration_date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.phone
