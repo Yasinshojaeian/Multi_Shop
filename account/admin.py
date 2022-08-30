@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from account.models import User
+from account.models import User,Otp
 from .forms import UserCreationForm , UserChangeForm
 
 
@@ -20,7 +20,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('phone','email', 'is_admin')
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password','phone')}),
         ('اطلاعات شخصی', {'fields': ('fullname',)}),
         ('دسترسی ها', {'fields': ('is_admin',)}),
     )
@@ -29,7 +29,7 @@ class UserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'fullname', 'password1', 'password2'),
+            'fields': ('phone','email', 'fullname', 'password1', 'password2'),
         }),
     )
     search_fields = ('email',)
@@ -39,6 +39,7 @@ class UserAdmin(BaseUserAdmin):
 
 # Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
+admin.site.register(Otp)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
