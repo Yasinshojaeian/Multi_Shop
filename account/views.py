@@ -7,6 +7,7 @@ from random import randint
 from .models import Otp, User
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+from uuid import uuid4
 # Create your views here.
 
 # def user_login(request):
@@ -35,7 +36,7 @@ class UserLogin(View):
         return render(request, 'account/login.html',context={'form':form})
     
     
-class RegisterView(View):
+class LoginView(View):
     def get(self, request):
         form = RegistrForm()
         return render(request, 'account/register.html',context={'form':form})
@@ -47,7 +48,7 @@ class RegisterView(View):
             randcode = randint(1000,9999)
             print(randcode)
             # SMS.verification({'receptor': cd['phone'],'type': '1','template': 'randomcode','param1': randcode})
-            token = get_random_string(length=100)
+            token = str(uuid4())
             Otp.objects.create(phone=cd['phone'],code=randcode,token=token)
             return redirect(reverse('account:check_otp')+f'?token={token}')
             
@@ -68,8 +69,9 @@ class CheckOtpView(View):
             token = request.GET.get('token')
             if Otp.objects.filter(code=cd['code'],token = token).exists:
                 otp = Otp.objects.get(token=token)
-                user = User.objects.create_user(phone=otp.phone)
+                user,is_create = User.objects.get_or_create(phone=otp.phone)
                 login(request, user)
+                otp.delete()
                 return redirect('home:home')            
         else :
             form.add_error("phone","Invalid Data")
