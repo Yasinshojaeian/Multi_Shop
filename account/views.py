@@ -24,14 +24,14 @@ class UserLogin(View):
         form = LoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
-            user = authenticate(username = cd['phone'],password = cd['password'])
+            user = authenticate(username = cd['username'],password = cd['password'])
             if user is not None :
                 login(request, user)
                 return redirect('home:home')
             else :
-                form.add_error("phone","Invalid User Data")
+                form.add_error("username","Invalid User Data")
         else :
-            form.add_error("phone","Invalid Data")
+            form.add_error("username","Invalid Data")
             
         return render(request, 'account/login.html',context={'form':form})
     

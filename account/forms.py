@@ -52,9 +52,30 @@ def validations_phone(value):
 
 
 class LoginForm(forms.Form):
-    phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'} ),label='شماره تلفن')
-    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}),label='رمز عبور')
-
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Email Or Phone'} ))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder':'Password'}))
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if username[0] == "0":
+            if len(username) > 11 :
+                raise ValidationError(
+                    'Invalid value: %(value)s is invaliad',
+                    code='invalid',
+                    params={'value': f'{username}'},
+                )
+            if username[0] != '0':
+                self.add_error('phone','شماره شما باید با 09 شروع شود ')
+            if username[1] != '9':
+                p = username[1]
+                raise ValidationError(
+                            'Invalid value: %(value)s',
+                            code='invalid',
+                            params={'value': f'رقم دوم شماره شما باید به جای{p} عدد 9 باشد'},
+                        )
+        else :
+           pass
+        return username
     # def clean_phone(self):
     #     phone = self.cleaned_data.get('phone')
     #     if len(phone) > 11 :
@@ -90,7 +111,6 @@ class LoginForm(forms.Form):
     #             code='invalid',
     #             params={'value': f'{phone}'},
     #         )
-    
     
 class RegistrForm(forms.Form):
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'} ),validators=[validators.MaxLengthValidator(11)])
