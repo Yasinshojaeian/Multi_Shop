@@ -64,22 +64,21 @@ class LoginForm(forms.Form):
     #             params={'value': f'{phone}'},
     #         )
     #     return phone
-    def clean_phone(self):
-
-        cd = super().clean()
-        phone = cd['phone']
-        if len(phone) > 12:
-            self.add_error('phone','Phone Is Not INvalid')
-        if phone[0] != '0':
-            self.add_error('phone','شماره شما باید با 09 شروع شود ')
-        if phone[1] != '9':
-            p = phone[1]
-            raise ValidationError(
-                        'Invalid value: %(value)s',
-                        code='invalid',
-                        params={'value': f'رقم دوم شماره شما باید به جای{p} عدد 9 باشد'},
-                    )
-        return phone
+    # def clean_phone(self):
+    #     cd = super().clean()
+    #     phone = cd['phone']
+    #     if len(phone) > 12:
+    #         self.add_error('phone','Phone Is Not INvalid')
+    #     if phone[0] != '0':
+    #         self.add_error('phone','شماره شما باید با 09 شروع شود ')
+    #     if phone[1] != '9':
+    #         p = phone[1]
+    #         raise ValidationError(
+    #                     'Invalid value: %(value)s',
+    #                     code='invalid',
+    #                     params={'value': f'رقم دوم شماره شما باید به جای{p} عدد 9 باشد'},
+    #                 )
+    #     return phone
     # def clean(self):
     #     breakpoint()
     #     y = super(LoginForm, self).clean()
