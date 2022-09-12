@@ -112,9 +112,9 @@ class LoginForm(forms.Form):
     #             params={'value': f'{phone}'},
     #         )
     
-class RegistrForm(forms.Form):
+class OtpLoginForm(forms.Form):
     phone = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'} ),validators=[validators.MaxLengthValidator(11)])
-    
+            
 class CheckOtpForm(forms.Form):
     code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'} ),validators=[validators.MaxLengthValidator(4)])
     

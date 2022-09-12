@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect
 from django.views import View
-from .forms import CheckOtpForm, LoginForm, RegistrForm
-from django.contrib.auth import authenticate ,login
+from .forms import CheckOtpForm, LoginForm, OtpLoginForm
+from django.contrib.auth import authenticate ,login,logout
 import ghasedakpack
 from random import randint
 from .models import Otp, User
@@ -38,11 +38,11 @@ class UserLogin(View):
     
 class LoginView(View):
     def get(self, request):
-        form = RegistrForm()
+        form = OtpLoginForm()
         return render(request, 'account/register.html',context={'form':form})
     
     def post(self, request):
-        form = RegistrForm(request.POST)
+        form = OtpLoginForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data
             randcode = randint(1000,9999)
@@ -70,7 +70,7 @@ class CheckOtpView(View):
             if Otp.objects.filter(code=cd['code'],token = token).exists:
                 otp = Otp.objects.get(token=token)
                 user,is_create = User.objects.get_or_create(phone=otp.phone)
-                login(request, user)
+                login(request, user,backend = 'django.contrib.auth.backends.ModelBackend')
                 otp.delete()
                 return redirect('home:home')            
         else :
@@ -78,3 +78,8 @@ class CheckOtpView(View):
             
         return render(request, 'account/check_otp.html',context={'form':form})
     
+    
+    
+def user_logout(request):
+    logout(request)
+    return redirect('/')
